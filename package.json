@@ -1,7 +1,7 @@
 {
-  "name": "portfolio",
+  "name": "Portfolio",
   "version": "0.1.1",
-  "homepage": "https://antot-12.github.io/Prortfolio-V1/",
+  "homepage": "https://antot-12.github.io/Portfolio",
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^4.1.0",

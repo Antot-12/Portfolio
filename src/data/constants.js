@@ -12,7 +12,7 @@ export const Bio = {
       "team player, and always ready to tackle new challenges.",
   github: "https://github.com/Antot-12",
   resume:
-    "https://drive.google.com/file/d/19dOidNpEsNlwp_Pu4vnRldtWxdcvETyc/view?usp=sharing",
+    "https://drive.google.com/file/d/1D_SweAD0_rLzVFCYY-Lp_AzHbAILZje8/view?usp=sharing",
   linkedin: "https://www.linkedin.com/in/anton-shyrko/",
   insta: "https://www.instagram.com/antot__12/",
 };

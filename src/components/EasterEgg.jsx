@@ -113,8 +113,8 @@ const KONAMI_CODE = [
 
 const EasterEgg = () => {
   const [activated, setActivated] = useState(false);
-  const [inputSequence, setInputSequence] = useState([]);
   const [showHint, setShowHint] = useState(false);
+  const [inputSequence, setInputSequence] = useState([]);
 
   const emojis = ["🚀", "💻", "🎮", "⭐", "🔥", "💡", "🎯", "🏆"];
 

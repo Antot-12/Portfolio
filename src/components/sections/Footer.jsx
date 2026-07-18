@@ -6,7 +6,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 
 const FooterContainer = styled.div`
   width: 100%;
-  padding: 2rem 0;
+  padding: 1rem 0;
   display: flex;
   justify-content: center;
   position: relative;
@@ -95,6 +95,7 @@ const Footer = () => {
             <NavLink href="#Experience">Experience</NavLink>
             <NavLink href="#Projects">Projects</NavLink>
             <NavLink href="#Education">Education</NavLink>
+            <NavLink href="#Certifications">Certifications</NavLink>
           </Nav>
           <SocialMediaIcons>
             <SocialMediaIcon href={Bio.linkedin} target="display">

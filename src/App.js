@@ -1,7 +1,7 @@
 import styled, { ThemeProvider } from "styled-components";
 import { darkTheme } from "./utils/Themes";
 import Navbar from "./components/Navbar";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Hero from "./components/sections/Hero";
 import Skills from "./components/sections/Skills";
 import StarCanvas from "./components/canvas/Stars";
@@ -9,8 +9,12 @@ import { AnimatePresence } from "framer-motion";
 import Education from "./components/sections/Education";
 import Experience from "./components/sections/Experience";
 import Projects from "./components/sections/Projects";
+import AllProjects from "./components/sections/AllProjects";
+import Certifications from "./components/sections/Certifications";
+import AllCertifications from "./components/sections/AllCertifications";
 import Footer from "./components/sections/Footer";
 import ProjectDetails from "./components/Dialog/ProjectDetails";
+import EasterEgg from "./components/EasterEgg";
 import { useState } from "react";
 
 const Body = styled.div`
@@ -38,34 +42,52 @@ const Wrapper = styled.div`
 
 function App() {
   const [openModal, setOpenModal] = useState({ state: false, project: null });
+
   return (
     <ThemeProvider theme={darkTheme}>
-      <BrowserRouter>
+      <BrowserRouter basename="/Portfolio">
         <Navbar />
         <Body>
           <StarCanvas />
+          <EasterEgg />
           <AnimatePresence>
-            <div>
-              <Hero />
-              <Wrapper>
-                <Skills />
-                <Experience />
-              </Wrapper>
-              <Projects openModal={openModal} setOpenModal={setOpenModal} />
-              <Wrapper>
-                <Education />
-
-              </Wrapper>
-              <Footer />
-
-              {openModal.state && (
-                <ProjectDetails
-                  openModal={openModal}
-                  setOpenModal={setOpenModal}
-                />
-              )}
-            </div>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <div>
+                    <Hero />
+                    <Wrapper>
+                      <Skills />
+                      <Experience />
+                    </Wrapper>
+                    <Projects openModal={openModal} setOpenModal={setOpenModal} />
+                    <Wrapper>
+                      <Education />
+                    </Wrapper>
+                    <Certifications />
+                    <Footer />
+                  </div>
+                }
+              />
+              <Route
+                path="/all-projects"
+                element={
+                  <AllProjects openModal={openModal} setOpenModal={setOpenModal} />
+                }
+              />
+              <Route
+                path="/all-certifications"
+                element={<AllCertifications />}
+              />
+            </Routes>
           </AnimatePresence>
+          {openModal.state && (
+            <ProjectDetails
+              openModal={openModal}
+              setOpenModal={setOpenModal}
+            />
+          )}
         </Body>
       </BrowserRouter>
     </ThemeProvider>

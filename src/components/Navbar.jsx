@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link as LinkR } from "react-router-dom";
+import { Link as LinkR, useLocation, useNavigate } from "react-router-dom";
 import styled, { useTheme } from "styled-components";
 import { Bio } from "../data/constants";
 import { MenuRounded } from "@mui/icons-material";
@@ -124,17 +124,41 @@ const MobileMenu = styled.ul`
   right: 0;
 
   transition: all 0.6s ease-in-out;
-  transform: ${({ isOpen }) =>
-    isOpen ? "translateY(0)" : "translateY(-100%)"};
+  transform: ${({ $isOpen }) =>
+    $isOpen ? "translateY(0)" : "translateY(-100%)"};
   border-radius: 0 0 20px 20px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  opacity: ${({ isOpen }) => (isOpen ? "100%" : "0")};
-  z-index: ${({ isOpen }) => (isOpen ? "1000" : "-1000")};
+  opacity: ${({ $isOpen }) => ($isOpen ? "100%" : "0")};
+  z-index: ${({ $isOpen }) => ($isOpen ? "1000" : "-1000")};
 `;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavClick = (e, sectionId) => {
+    e.preventDefault();
+    if (location.pathname !== "/") {
+      // Navigate to home page first, then scroll to section
+      navigate("/");
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      // Already on home page, just scroll
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+    setIsOpen(false);
+  };
+
   return (
     <Nav>
       <NavbarContainer>
@@ -149,29 +173,33 @@ const Navbar = () => {
         </MobileIcon>
 
         <NavItems>
-          <NavLink href="#About">About</NavLink>
-          <NavLink href="#Skills">Skills</NavLink>
-          <NavLink href="#Experience">Experience</NavLink>
-          <NavLink href="#Projects">Projects</NavLink>
-          <NavLink href="#Education">Education</NavLink>
+          <NavLink href="#About" onClick={(e) => handleNavClick(e, "About")}>About</NavLink>
+          <NavLink href="#Skills" onClick={(e) => handleNavClick(e, "Skills")}>Skills</NavLink>
+          <NavLink href="#Experience" onClick={(e) => handleNavClick(e, "Experience")}>Experience</NavLink>
+          <NavLink href="#Projects" onClick={(e) => handleNavClick(e, "Projects")}>Projects</NavLink>
+          <NavLink href="#Education" onClick={(e) => handleNavClick(e, "Education")}>Education</NavLink>
+          <NavLink href="#Certifications" onClick={(e) => handleNavClick(e, "Certifications")}>Certifications</NavLink>
         </NavItems>
 
         {isOpen && (
-          <MobileMenu isOpen={isOpen}>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#About">
+          <MobileMenu $isOpen={isOpen}>
+            <NavLink href="#About" onClick={(e) => handleNavClick(e, "About")}>
               About
             </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Skills">
+            <NavLink href="#Skills" onClick={(e) => handleNavClick(e, "Skills")}>
               Skills
             </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Experience">
+            <NavLink href="#Experience" onClick={(e) => handleNavClick(e, "Experience")}>
               Experience
             </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Projects">
+            <NavLink href="#Projects" onClick={(e) => handleNavClick(e, "Projects")}>
               Projects
             </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Education">
+            <NavLink href="#Education" onClick={(e) => handleNavClick(e, "Education")}>
               Education
+            </NavLink>
+            <NavLink href="#Certifications" onClick={(e) => handleNavClick(e, "Certifications")}>
+              Certifications
             </NavLink>
             <GithubButton
               href={Bio.github}

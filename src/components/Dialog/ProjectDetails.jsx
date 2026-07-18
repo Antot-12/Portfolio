@@ -11,17 +11,17 @@ const Container = styled.div`
   left: 0;
   background-color: #000000a7;
   display: flex;
-  align-items: top;
+  align-items: center;
   justify-content: center;
-  overflow-y: scroll;
+  overflow-y: auto;
   transition: all 0.5s ease;
+  padding: 20px;
 `;
 
 const Wrapper = styled.div`
-  max-width: 800px;
+  max-width: 550px;
   width: 100%;
   border-radius: 16px;
-  margin: 50px 12px;
   height: min-content;
   background-color: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text_primary};
@@ -32,18 +32,18 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 600;
   color: ${({ theme }) => theme.text_primary};
   margin: 8px 6px 0px 6px;
   @media only screen and (max-width: 600px) {
-    font-size: 24px;
+    font-size: 18px;
     margin: 6px 6px 0px 6px;
   }
 `;
 
 const Date = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   margin: 2px 6px;
   font-weight: 400;
   color: ${({ theme }) => theme.text_secondary};
@@ -53,31 +53,32 @@ const Date = styled.div`
 `;
 
 const Desc = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color: ${({ theme }) => theme.text_primary};
   margin: 8px 6px;
   @media only screen and (max-width: 600px) {
-    font-size: 14px;
+    font-size: 13px;
     margin: 6px 6px;
   }
 `;
 
 const Image = styled.img`
   width: 100%;
+  max-height: 200px;
   object-fit: cover;
   border-radius: 12px;
-  margin-top: 30px;
+  margin-top: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
 `;
 
 const Label = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: ${({ theme }) => theme.text_primary};
   margin: 8px 6px;
   @media only screen and (max-width: 600px) {
-    font-size: 16px;
+    font-size: 14px;
     margin: 8px 6px;
   }
 `;
@@ -85,22 +86,22 @@ const Label = styled.div`
 const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin: 8px 0px;
+  margin: 6px 0px;
   @media only screen and (max-width: 600px) {
     margin: 4px 0px;
   }
 `;
 
 const Tag = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   color: ${({ theme }) => theme.primary};
-  margin: 4px;
-  padding: 4px 8px;
+  margin: 3px;
+  padding: 3px 8px;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.primary + 20};
   @media only screen and (max-width: 600px) {
-    font-size: 12px;
+    font-size: 11px;
   }
 `;
 
@@ -109,7 +110,7 @@ const Members = styled.div`
   flex-direction: column;
   gap: 6px;
   flex-wrap: wrap;
-  margin: 12px 6px;
+  margin: 8px 6px;
   @media only screen and (max-width: 600px) {
     margin: 4px 6px;
   }
@@ -122,8 +123,8 @@ const Member = styled.div`
 `;
 
 const MemberImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
   margin-bottom: 4px;
@@ -135,38 +136,38 @@ const MemberImage = styled.img`
 `;
 
 const MemberName = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   width: 200px;
   color: ${({ theme }) => theme.text_primary};
   @media only screen and (max-width: 600px) {
-    font-size: 14px;
+    font-size: 13px;
   }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin: 12px 0px;
+  margin: 12px 0px 0px 0px;
   gap: 12px;
 `;
 
 const Button = styled.a`
   width: 100%;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: ${({ theme }) => theme.text_primary};
-  padding: 12px 16px;
+  padding: 10px 16px;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.primary};
-  ${({ dull, theme }) =>
-    dull &&
+  ${({ $dull, theme }) =>
+    $dull &&
     `
         background-color: ${theme.bgLight};
         color: ${theme.text_secondary};
         &:hover {
-            background-color: ${({ theme }) => theme.bg + 99};
+            background-color: ${theme.bg + 99};
         }
     `}
   cursor: pointer;
@@ -200,19 +201,19 @@ const ProjectDetails = ({ openModal, setOpenModal }) => {
           />
           <Image src={project?.image} />
           <Title>{project?.title}</Title>
-          <Date>{project.date}</Date>
+          <Date>{project?.date}</Date>
           <Tags>
-            {project?.tags.map((tag) => (
-              <Tag>{tag}</Tag>
+            {project?.tags?.map((tag, index) => (
+              <Tag key={`tag-${index}`}>{tag}</Tag>
             ))}
           </Tags>
           <Desc>{project?.description}</Desc>
-          {project.member && (
+          {project?.member && (
             <>
               <Label>Members</Label>
               <Members>
-                {project?.member.map((member) => (
-                  <Member>
+                {project?.member?.map((member, index) => (
+                  <Member key={`member-${index}`}>
                     <MemberImage src={member.img} />
                     <MemberName>{member.name}</MemberName>
                     <a
@@ -235,7 +236,7 @@ const ProjectDetails = ({ openModal, setOpenModal }) => {
             </>
           )}
           <ButtonGroup>
-            <Button dull href={project?.github} target="new">
+            <Button $dull href={project?.github} target="new">
               View Code
             </Button>
             <Button href={project?.webapp} target="new">

@@ -1,7 +1,18 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { keyframes } from "styled-components";
+import { motion } from "framer-motion";
+import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 
-const Card = styled.div`
+const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
+
+const Card = styled(motion.div)`
   width: 330px;
   height: 490px;
   background-color: ${({ theme }) => theme.card};
@@ -14,18 +25,36 @@ const Card = styled.div`
   flex-direction: column;
   gap: 14px;
   transition: all 0.5s ease-in-out;
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 50px 4px rgba(0, 0, 0, 0.6);
-    filter: brightness(1.1);
-  }
+  position: relative;
+  z-index: 2;
 `;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    ${({ theme }) => theme.card_light}33 25%,
+    ${({ theme }) => theme.card_light}66 50%,
+    ${({ theme }) => theme.card_light}33 75%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.5s infinite;
+`;
+
 const Image = styled.img`
   width: 100%;
   height: 180px;
   background-color: ${({ theme }) => theme.white};
   border-radius: 10px;
   box-shadow: 0 0 16px 2px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+  opacity: ${({ $loaded }) => ($loaded ? 1 : 0)};
+  transition: opacity 0.5s ease-in-out;
+  filter: ${({ $loaded }) => ($loaded ? 'none' : 'blur(10px)')};
 `;
 const Tags = styled.div`
   width: 100%;
@@ -49,6 +78,7 @@ const Details = styled.div`
   flex-direction: column;
   gap: 0px;
   padding: 0px 2px;
+  flex: 1;
 `;
 const Title = styled.div`
   font-size: 20px;
@@ -62,15 +92,6 @@ const Title = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-const Date = styled.div`
-  font-size: 12px;
-  margin-left: 2px;
-  font-weight: 400;
-  color: ${({ theme }) => theme.text_secondary + 80};
-  @media only screen and (max-width: 768px) {
-    font-size: 10px;
-  }
-`;
 const Description = styled.div`
   font-weight: 400;
   color: ${({ theme }) => theme.text_secondary + 99};
@@ -82,41 +103,98 @@ const Description = styled.div`
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 `;
-const Members = styled.div`
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+`;
+
+const Button = styled(motion.a)`
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: ${({ $primary, theme }) => $primary ? theme.primary : "transparent"};
+  border: 2px solid ${({ theme }) => theme.primary};
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  padding-left: 10px;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  &:hover {
+    background: ${({ theme }) => theme.primary};
+  }
 `;
-const Avatar = styled.img`
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  margin-left: -10px;
-  background-color: ${({ theme }) => theme.white};
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border: 3px solid ${({ theme }) => theme.card};
-`;
-
 
 const ProjectCard = ({ project, setOpenModal }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleCardClick = (e) => {
+    // Don't open modal if clicking on buttons
+    if (e.target.closest('a')) return;
+    if (setOpenModal) {
+      setOpenModal({ state: true, project: project });
+    }
+  };
+
   return (
-    <Card onClick={() => setOpenModal({ state: true, project: project })}>
-      <Image src={project.image} />
+    <Card
+      onClick={handleCardClick}
+      whileHover={{
+        y: -10,
+        boxShadow: "0 0 50px 4px rgba(0, 0, 0, 0.6)",
+        filter: "brightness(1.1)"
+      }}
+      transition={{ duration: 0.3 }}
+    >
+      <ImageContainer>
+        <Image
+          src={project.image}
+          alt={project.title}
+          $loaded={imageLoaded}
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+        />
+      </ImageContainer>
       <Tags>
         {project.tags?.map((tag, index) => (
-          <Tag>{tag}</Tag>
+          <Tag key={`tag-${index}`}>{tag}</Tag>
         ))}
       </Tags>
       <Details>
         <Title>{project.title}</Title>
-        <Date>{project.date}</Date>
         <Description>{project.description}</Description>
       </Details>
-      <Members>
-        {project.member?.map((member) => (
-          <Avatar src={member.img} />
-        ))}
-      </Members>
+      <ButtonGroup>
+        <Button
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <FaGithub /> Code
+        </Button>
+        {project.webapp && (
+          <Button
+            $primary
+            href={project.webapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FaExternalLinkAlt /> Demo
+          </Button>
+        )}
+      </ButtonGroup>
     </Card>
   );
 };
